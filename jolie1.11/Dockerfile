@@ -28,7 +28,7 @@ ADD lib/launcher.ol /proxy/lib/launcher.ol
 ADD bin/compile /proxy/bin/compile
 
 #Since the compile script is in python
-RUN apk update && apk add python3
+# RUN apk update && apk add python3
 
 RUN apt-get update
 RUN apt-get install -y python3

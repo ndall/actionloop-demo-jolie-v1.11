@@ -17,7 +17,7 @@
 FROM openwhisk/actionloop-v2:latest as builder
 
 #Jolie docker
-FROM myjolie/1
+FROM myjolie/2
 
 RUN mkdir -p /proxy/bin /proxy/lib /proxy/action
 WORKDIR /proxy
@@ -33,13 +33,12 @@ ADD bin/compile /proxy/bin/compile
 RUN apt-get update
 RUN apt-get install -y python3
 
-# please check if the path exists
+#Set home variables
 ENV JAVA_HOME=/opt/java/openjdk    
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 ENV JOLIE_HOME=/usr/lib/jolie
 RUN export JOLIE_HOME
-##########
 
 ENV OW_COMPILER=/proxy/bin/compile
 ENTRYPOINT ["/bin/proxy"]

@@ -27,7 +27,7 @@ service Mock {
 
             myReadLine@console("in")(line)
 
-            if(line == "BUFFERED READER EOF ENCOUNTERED"){
+            if(line == void){
                 looping = false
             }else{
                 getJsonValue@JsonUtils( line )( args )
@@ -50,7 +50,7 @@ service Mock {
                 //error handling here
 
                 //write to fd3
-                writeFile@file({filename = "/dev/fd/3" content=responseJson + "\n"} )()
+                writeFile@file({filename = "/dev/fd/3" content=responseJson + "\n" append = 1} )()
 
                 //writeFile@file({filename = "out.txt" content=responseJson + "\n"} )()
                 //println@console(responseJson)()

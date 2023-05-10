@@ -17,7 +17,7 @@
 FROM openwhisk/actionloop-v2:latest as builder
 
 #Jolie docker
-FROM myjolie/2
+FROM myjolie/3
 
 RUN mkdir -p /proxy/bin /proxy/lib /proxy/action
 WORKDIR /proxy

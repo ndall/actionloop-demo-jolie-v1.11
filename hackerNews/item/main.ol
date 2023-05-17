@@ -4,11 +4,13 @@ Service has to be named: Main
 Method can be named anything
 */
 
-from .hello import Main as Main2
+from .hackerNews import HackerNewsMiddleLayer as HNMiddleLayer
+from console import Console as console
 
 service Main {    
 
-    embed Main2 as helloMain
+    embed HNMiddleLayer as HNMiddleLayer
+    embed console as Console
 
     inputPort mainIp {
         location: "local"
@@ -21,8 +23,8 @@ service Main {
     main{
 
         run(request)(response){
-            run@helloMain(request)(responseImport)
-            response << responseImport
+            getItem@HNMiddleLayer({id = request.id})(HNresponse)
+            response << HNresponse
         }
 
     }

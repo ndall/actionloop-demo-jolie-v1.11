@@ -4,11 +4,7 @@ Service has to be named: Main
 Method can be named anything
 */
 
-from .hello import Main as Main2
-
 service Main {    
-
-    embed Main2 as helloMain
 
     inputPort mainIp {
         location: "local"
@@ -21,8 +17,13 @@ service Main {
     main{
 
         run(request)(response){
-            run@helloMain(request)(responseImport)
-            response << responseImport
+            if(is_defined(request.name)){
+                name = request.name
+            }else{
+                name = "Stranger"
+            }
+            greeting = "Hello " + name
+            response.greeting << greeting    
         }
 
     }

@@ -15,15 +15,15 @@
 # limitations under the License.
 #
 
-IMG=actionloop-demo-python-v3.7:latest
-ACT=hello-demo-python
-PREFIX=docker.io/openwhisk
+IMG=actionloop-demo-jolie-v1.11:latest
+ACT=hello-jolie
+PREFIX=docker.io/ndall
 
-src.zip: main.rb hello.py
-	zip src.zip __main__.py hello.py
+src.zip: main.ol hello.ol
+	zip src.zip main.ol hello.ol
 
 bin.zip: src.zip
-	docker run -i $(IMG) -compile main <src.zip >bin.zip
+	docker run -i $(IMG) -compile run <src.zip >bin.zip
 
 test-single:
 	wsk action update $(ACT) hello.py --docker $(PREFIX)/$(IMG) --main hello

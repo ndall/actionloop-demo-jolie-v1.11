@@ -16,8 +16,8 @@
 #
 
 IMG=actionloop-demo-jolie-v1.11:latest
-INVOKE=python ../tools/invoke.py
-PREFIX=docker.io/openwhisk
+INVOKE=python3 ../tools/invoke.py
+PREFIX=docker.io/ndall
 
 build:
 	docker build -t $(IMG) .
@@ -40,18 +40,18 @@ debug: build
 
 ## You need to execute make start in another terminal
 test-single:
-	$(INVOKE) init hello ../example/hello.py
+	$(INVOKE) init run ../example/hello.ol
 	$(INVOKE) run '{}'
 	$(INVOKE) run '{"name":"Mike"}'
 
 test-src-zip:
 	$(MAKE) -C ../example src.zip
-	$(INVOKE) init ../example/src.zip
+	$(INVOKE) init run ../example/src.zip
 	$(INVOKE) run '{}'
 	$(INVOKE) run '{"name":"Mike"}'
 
 test-bin-zip:
 	$(MAKE) -C ../example bin.zip
-	$(INVOKE) init ../example/bin.zip
+	$(INVOKE) init run ../example/bin.zip
 	$(INVOKE) run '{}'
 	$(INVOKE) run '{"name":"Mike"}'

@@ -7,7 +7,7 @@ from string_utils import StringUtils
 //Import users action
 from .main__ import Main
 
-service Mock {    
+service Launcher {    
 
     embed Runtime as runtime
     embed File as file
@@ -23,39 +23,42 @@ service Mock {
     }
 
     main{
-        while(looping){ 
+        scope( launcherScope ){
+            //error handling
+            install( 
+                default => errorResponse.error << launcherScope.default
+                getJsonString@JsonUtils(errorResponse)(errorResponseJson)
+                println@console(errorResponseJson)()
+                writeFile@file({filename = "/dev/fd/3" content=errorResponseJson + "\n" append = 1} )()
+            )
 
-            myReadLine@console("in")(line)
+            while(looping){ 
 
-            if(line == void){
-                looping = false
-            }else{
-                getJsonValue@JsonUtils( line )( args )
-                payload = {}
-            
-                foreach(key : args){
-                    if(key == "value"){
-                        payload << args.value
-                    } else{
-                        toUpperCase@StringUtils(key)(upperKey)
-                        setenv@runtime({ key= "__OW_" + upperKey  value=args.(key)})()
+                myReadLine@console("in")(line)
+
+                if(line == void){
+                    looping = false
+                }else{
+                    getJsonValue@JsonUtils( line )( args )
+                    payload = {}
+                
+                    foreach(key : args){
+                        if(key == "value"){
+                            payload << args.value
+                        } else{
+                            toUpperCase@StringUtils(key)(upperKey)
+                            setenv@runtime({ key= "__OW_" + upperKey  value=args.(key)})()
+                        }
                     }
+
+                    //invoke action with payload
+                    run@Main(payload)(response)
+
+                    getJsonString@JsonUtils(response)(responseJson)
+
+                    //write to fd3
+                    writeFile@file({filename = "/dev/fd/3" content=responseJson + "\n" append = 1} )()
                 }
-                
-                //try
-
-                run@Main(payload)(response)
-                getJsonString@JsonUtils(response)(responseJson)
-
-                //error handling here
-
-                
-
-                //write to fd3
-                writeFile@file({filename = "/dev/fd/3" content=responseJson + "\n" append = 1} )()
-
-                //writeFile@file({filename = "out.txt" content=responseJson + "\n"} )()
-                //println@console(responseJson)()
             }
         }
     }

@@ -28,7 +28,6 @@ service Launcher {
             install( 
                 default => errorResponse.error << launcherScope.default
                 getJsonString@JsonUtils(errorResponse)(errorResponseJson)
-                println@console(errorResponseJson)()
                 writeFile@file({filename = "/dev/fd/3" content=errorResponseJson + "\n" append = 1} )()
             )
 
